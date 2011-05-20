@@ -1,0 +1,12 @@
+{% extends "site_base.html" %}
+
+{% load uni_form_tags %}
+
+{% block body %}
+  <form action="." method="post" class="uniForm">
+    {% csrf_token %}
+    {{ form|as_uni_form }}
+    <p><input type="submit" name="" value="submit" id=""/></p>
+  </form>
+{% endblock %}
+
