@@ -47,12 +47,3 @@ To test django-shop-discounts application and get a feeling how it works::
 
 4. Username and password for admin are: admin:password
 
-TODO:
------
-
-* handle overlapping discounts
-
-* discount type for free shipping
-
-.. _github.com/bmihelac/django-shop-discounts: https://github.com/bmihelac/django-shop-discounts
-
