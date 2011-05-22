@@ -35,7 +35,8 @@ class DiscountBase(PolymorphicModel):
     valid_from = models.DateTimeField(_('Valid from'), default=datetime.now)
     valid_until = models.DateTimeField(_('Valid until'), blank=True, null=True)
 
-    num_uses = models.IntegerField(_('Number of times already used'), default=0)
+    num_uses = models.IntegerField(_('Number of times already used'),
+            default=0)
 
     objects = DiscountBaseManager()
     product_filters = []

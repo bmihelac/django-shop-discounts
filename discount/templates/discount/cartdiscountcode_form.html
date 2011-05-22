@@ -1,12 +1,8 @@
-{% extends "site_base.html" %}
+<h1>Discount code</h1>
 
-{% load uni_form_tags %}
-
-{% block body %}
-  <form action="." method="post" class="uniForm">
-    {% csrf_token %}
-    {{ form|as_uni_form }}
-    <p><input type="submit" name="" value="submit" id=""/></p>
-  </form>
-{% endblock %}
+<form action="." method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <p><input type="submit" name="" value="submit" id=""/></p>
+</form>
 
