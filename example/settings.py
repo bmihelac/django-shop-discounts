@@ -1,3 +1,4 @@
+import os
 # Django settings for example project.
 
 DEBUG = True
@@ -101,6 +102,7 @@ if django.VERSION[0] < 1 or django.VERSION[1] < 3:
 ROOT_URLCONF = 'example.urls'
 
 TEMPLATE_DIRS = (
+    os.path.join(os.path.dirname(__file__), 'templates'),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -134,8 +136,8 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'south',
     'polymorphic', # We need polymorphic installed for the shop
-    'shop', # The django SHOP application
     'discount',
+    'shop', # The django SHOP application
     'myshop', # the project we just created
 )
 
