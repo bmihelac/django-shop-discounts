@@ -122,10 +122,13 @@ class CartItemPercentDiscount(DiscountBase):
     """
     amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
 
+    def calculate_discount(self, price):
+        return (self.amount/100) * price
+
     def process_cart_item(self, cart_item):
         if self.is_eligible_product(cart_item.product, cart_item.cart):
-            amount = (self.amount/100) * cart_item.line_subtotal
-            to_append = (self.get_name(), amount)
+            to_append = (self.get_name(),
+                    self.calculate_discount(cart_item.line_subtotal))
             cart_item.extra_price_fields.append(to_append)
 
     class Meta:
@@ -139,9 +142,13 @@ class CartItemAbsoluteDiscount(DiscountBase):
     """
     amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
 
+    def calculate_discount(self, price):
+        return self.amount
+
     def process_cart_item(self, cart_item):
         if self.is_eligible_product(cart_item.product, cart_item.cart):
-            to_append = (self.get_name(), self.amount)
+            to_append = (self.get_name(),
+                    self.calculate_discount(cart_item.line_subtotal))
             cart_item.extra_price_fields.append(to_append)
 
     class Meta:
