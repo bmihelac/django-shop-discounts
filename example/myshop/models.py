@@ -24,7 +24,7 @@ class Book(Product):
     short_description = models.CharField(_('Short description'), 
             max_length=100, blank=True)
     long_description = models.TextField(_('Long description'), blank=True)
-    categories = models.ManyToManyField(Category, null=True)
+    categories = models.ManyToManyField(Category, null=True, blank=True)
 
     objects = BookManager()
 
