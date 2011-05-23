@@ -111,6 +111,10 @@ class PercentDiscount(DiscountBase):
         to_append = (self.get_name(), amount)
         cart.extra_price_fields.append(to_append)
 
+    class Meta:
+        verbose_name = _('Cart percent discount')
+        verbose_name_plural = _('Cart percent discounts')
+
 
 class CartItemPercentDiscount(DiscountBase):
     """
@@ -123,3 +127,7 @@ class CartItemPercentDiscount(DiscountBase):
             amount = (self.amount/100) * cart_item.line_subtotal
             to_append = (self.get_name(), amount)
             cart_item.extra_price_fields.append(to_append)
+
+    class Meta:
+        verbose_name = _('Cart item percent discount')
+        verbose_name_plural = _('Cart item percent discounts')
