@@ -8,7 +8,7 @@ from shop.models.productmodel import Product
 from shop.models.cartmodel import Cart
 
 from discount.models import (DiscountBase, PercentDiscount, 
-        CartItemPercentDiscount)
+        CartItemPercentDiscount, CartItemAbsoluteDiscount)
 
 
 settings.SHOP_CART_MODIFIERS = ['discount.cart_modifiers.DiscountCartModifier']
@@ -96,8 +96,6 @@ class DiscountProductFiltersTest(TestCase):
         self.product_1 = create_product(unit_price=Decimal("10.0"))
         self.product_2 = create_product(unit_price=Decimal("20.0"))
         self.discount = DiscountBase.objects.create(name='discount 1')
-
-    def tearDown(self):
         DiscountBase.product_filters = []
 
     def test_01_eligible_products_without_product_filters(self):
@@ -136,4 +134,21 @@ class CartItemPercentDiscountTest(TestCase):
         self.assertEquals(len(cart_item.extra_price_fields), 1)
         self.assertEquals(cart_item.extra_price_fields[0],
                 ((unicode(self.discount), Decimal("-0.5"), )))
+
+
+class CartItemAbsoluteDiscountTest(TestCase):
+
+    def setUp(self):
+        self.product_1 = create_product(unit_price=Decimal("10.0"))
+        self.cart = Cart.objects.create()
+        self.cart.add_product(self.product_1)
+        self.discount = CartItemAbsoluteDiscount.objects.create(name='dsc', 
+                amount="-1")
+
+    def test_01_cart_item_should_be_discounted(self):
+        cart_item = self.cart.items.get(product=self.product_1)
+        cart_item.update()
+        self.assertEquals(len(cart_item.extra_price_fields), 1)
+        self.assertEquals(cart_item.extra_price_fields[0],
+                ((unicode(self.discount), Decimal("-1"), )))
 

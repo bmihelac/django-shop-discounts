@@ -131,3 +131,19 @@ class CartItemPercentDiscount(DiscountBase):
     class Meta:
         verbose_name = _('Cart item percent discount')
         verbose_name_plural = _('Cart item percent discounts')
+
+
+class CartItemAbsoluteDiscount(DiscountBase):
+    """
+    Apply ``amount`` discount to eligible_products in Cart.
+    """
+    amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
+
+    def process_cart_item(self, cart_item):
+        if self.is_eligible_product(cart_item.product, cart_item.cart):
+            to_append = (self.get_name(), self.amount)
+            cart_item.extra_price_fields.append(to_append)
+
+    class Meta:
+        verbose_name = _('Cart item absolute discount')
+        verbose_name_plural = _('Cart item absolute discounts')
