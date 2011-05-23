@@ -1,6 +1,6 @@
-=====
-TODO:
-=====
+====
+TODO
+====
 
 * handle overlapping discounts
 
@@ -9,3 +9,5 @@ TODO:
 * number of uses does not work yet
 
 * allow different discount codes
+
+* optimize
