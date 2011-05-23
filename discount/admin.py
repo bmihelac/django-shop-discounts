@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from discount.models import PercentDiscount
-from discount.models import CartItemPercentDiscount
+from discount.models import (PercentDiscount, CartItemPercentDiscount,
+        CartItemAbsoluteDiscount)
 
 
 class PercentDiscountAdmin(admin.ModelAdmin):
@@ -12,7 +12,10 @@ class CartItemPercentDiscountAdmin(admin.ModelAdmin):
     pass
 
 
+class CartItemAbsoluteDiscountAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(PercentDiscount, PercentDiscountAdmin)
 admin.site.register(CartItemPercentDiscount, CartItemPercentDiscountAdmin)
-
-
+admin.site.register(CartItemAbsoluteDiscount, CartItemAbsoluteDiscountAdmin)
