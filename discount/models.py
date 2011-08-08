@@ -41,6 +41,11 @@ class DiscountBase(PolymorphicModel):
     objects = DiscountBaseManager()
     product_filters = []
 
+    def __init__(self, *args, **kwargs):
+        print "init"
+        self._eligible_products_cache = {}
+        return super(DiscountBase, self).__init__(*args, **kwargs)
+
     class Meta:
         verbose_name = _('Discount')
         verbose_name_plural = _('Discounts')
@@ -70,16 +75,21 @@ class DiscountBase(PolymorphicModel):
        """
        Returns queryset of products this discounts may apply to.
        """
-       qs = Product.objects.all()
-       for filt in self.__class__.product_filters:
-           if callable(filt):
-               qs = filt(self, qs)
-           elif type(filt) is dict:
-               qs = qs.filter(**filt)
-           else:
-               qs = qs.filter(filt)
-       if in_products:
-           qs = qs.filter(id__in=[p.id for p in in_products])
+       cache_key = tuple(in_products) if in_products else None
+       try:
+           qs = self._eligible_products_cache[cache_key]
+       except KeyError:
+           qs = Product.objects.all()
+           for filt in self.__class__.product_filters:
+               if callable(filt):
+                   qs = filt(self, qs)
+               elif type(filt) is dict:
+                   qs = qs.filter(**filt)
+               else:
+                   qs = qs.filter(filt)
+           if in_products:
+               qs = qs.filter(id__in=[p.id for p in in_products])
+           self._eligible_products_cache[cache_key] = qs
        return qs
 
     def is_eligible_product(self, product, cart):
