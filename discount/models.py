@@ -42,7 +42,6 @@ class DiscountBase(PolymorphicModel):
     product_filters = []
 
     def __init__(self, *args, **kwargs):
-        print "init"
         self._eligible_products_cache = {}
         return super(DiscountBase, self).__init__(*args, **kwargs)
 
