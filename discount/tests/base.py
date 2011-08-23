@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from decimal import Decimal
 
@@ -61,7 +62,7 @@ class DiscountCartModifierTest(TestCase):
 
     def test_01_percent_discount(self):
         PercentDiscount.objects.create(name='dsc', amount="-10")
-        self.cart.update()
+        self.cart.update({})
         self.assertEquals(self.cart.total_price, 9)
         self.assertEquals(len(self.cart.extra_price_fields), 1)
         self.assertEquals(self.cart.extra_price_fields[0][0], 'dsc')
@@ -71,13 +72,13 @@ class DiscountCartModifierTest(TestCase):
         PercentDiscount.objects.create(
                 name='dsc', code='dsc10', amount="-10")
         self.cart.cartdiscountcode_set.create(code='dsc10')
-        self.cart.update()
+        self.cart.update({})
         self.assertEquals(self.cart.total_price, 9)
 
     def test_03_without_valid_discount_code(self):
         PercentDiscount.objects.create(
                 name='dsc', code='dsc10', amount="-10")
-        self.cart.update()
+        self.cart.update({})
         self.assertEquals(self.cart.total_price, 10)
 
 
@@ -85,6 +86,7 @@ def create_product(**kwargs):
     data = {
             'name': 'test',
             'unit_price': Decimal("10.0"),
+            'slug': str(uuid.uuid4()),
             }
     data.update(kwargs)
     return Product.objects.create(**data)
@@ -130,7 +132,7 @@ class CartItemPercentDiscountTest(TestCase):
 
     def test_01_cart_item_should_be_discounted(self):
         cart_item = self.cart.items.get(product=self.product_1)
-        cart_item.update()
+        cart_item.update({})
         self.assertEquals(len(cart_item.extra_price_fields), 1)
         self.assertEquals(cart_item.extra_price_fields[0],
                 ((unicode(self.discount), Decimal("-0.5"), )))
@@ -147,7 +149,7 @@ class CartItemAbsoluteDiscountTest(TestCase):
 
     def test_01_cart_item_should_be_discounted(self):
         cart_item = self.cart.items.get(product=self.product_1)
-        cart_item.update()
+        cart_item.update({})
         self.assertEquals(len(cart_item.extra_price_fields), 1)
         self.assertEquals(cart_item.extra_price_fields[0],
                 ((unicode(self.discount), Decimal("-1"), )))

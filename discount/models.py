@@ -9,6 +9,7 @@ from polymorphic.polymorphic_model import PolymorphicModel
 
 from shop.models.cartmodel import Cart
 from shop.models.productmodel import Product
+from shop.cart.cart_modifiers_base import BaseCartModifier
 
 
 class DiscountBaseManager(PolymorphicManager):
@@ -23,7 +24,7 @@ class DiscountBaseManager(PolymorphicManager):
         return qs
 
 
-class DiscountBase(PolymorphicModel):
+class DiscountBase(PolymorphicModel, BaseCartModifier):
     """
     """
     name = models.CharField(_('Name'), max_length=100)
@@ -51,12 +52,6 @@ class DiscountBase(PolymorphicModel):
 
     def get_name(self):
         return self.name
-
-    def process_cart_item(self, cart_item):
-        pass
-
-    def process_cart(self, cart):
-        pass
 
     @classmethod
     def register_product_filter(cls, filt):
@@ -106,10 +101,9 @@ class PercentDiscount(DiscountBase):
     """
     amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
 
-    def process_cart(self, cart):
+    def get_extra_cart_price_field(self, cart):
         amount = (self.amount/100) * cart.subtotal_price
-        to_append = (self.get_name(), amount)
-        cart.extra_price_fields.append(to_append)
+        return (self.get_name(), amount,)
 
     class Meta:
         verbose_name = _('Cart percent discount')
@@ -122,11 +116,10 @@ class CartItemPercentDiscount(DiscountBase):
     """
     amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
 
-    def process_cart_item(self, cart_item):
+    def get_extra_cart_item_price_field(self, cart_item):
         if self.is_eligible_product(cart_item.product, cart_item.cart):
             amount = (self.amount/100) * cart_item.line_subtotal
-            to_append = (self.get_name(), amount)
-            cart_item.extra_price_fields.append(to_append)
+            return (self.get_name(), amount,)
 
     class Meta:
         verbose_name = _('Cart item percent discount')
@@ -139,10 +132,9 @@ class CartItemAbsoluteDiscount(DiscountBase):
     """
     amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
 
-    def process_cart_item(self, cart_item):
+    def get_extra_cart_item_price_field(self, cart_item):
         if self.is_eligible_product(cart_item.product, cart_item.cart):
-            to_append = (self.get_name(), self.amount)
-            cart_item.extra_price_fields.append(to_append)
+            return (self.get_name(), self.amount,)
 
     class Meta:
         verbose_name = _('Cart item absolute discount')

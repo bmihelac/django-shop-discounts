@@ -16,12 +16,12 @@ class DiscountCartModifier(BaseCartModifier):
             code = ''
         return DiscountBase.objects.active(code=code)
 
-    def add_extra_cart_item_price_field(self, cart_item):
+    def process_cart_item(self, cart_item, state):
         for discount in self.get_active_discounts(cart_item.cart):
-            discount.process_cart_item(cart_item)
+            discount.process_cart_item(cart_item, state)
         return cart_item
 
-    def add_extra_cart_price_field(self, cart):
+    def process_cart(self, cart, state):
         for discount in self.get_active_discounts(cart):
-            discount.process_cart(cart)
+            discount.process_cart(cart, state)
         return cart
