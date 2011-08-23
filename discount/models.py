@@ -42,6 +42,10 @@ class DiscountBase(PolymorphicModel, BaseCartModifier):
     objects = DiscountBaseManager()
     product_filters = []
 
+    def __init__(self, *args, **kwargs):
+        self._eligible_products_cache = {}
+        return super(DiscountBase, self).__init__(*args, **kwargs)
+
     class Meta:
         verbose_name = _('Discount')
         verbose_name_plural = _('Discounts')
@@ -65,16 +69,21 @@ class DiscountBase(PolymorphicModel, BaseCartModifier):
        """
        Returns queryset of products this discounts may apply to.
        """
-       qs = Product.objects.all()
-       for filt in self.__class__.product_filters:
-           if callable(filt):
-               qs = filt(self, qs)
-           elif type(filt) is dict:
-               qs = qs.filter(**filt)
-           else:
-               qs = qs.filter(filt)
-       if in_products:
-           qs = qs.filter(id__in=[p.id for p in in_products])
+       cache_key = tuple(in_products) if in_products else None
+       try:
+           qs = self._eligible_products_cache[cache_key]
+       except KeyError:
+           qs = Product.objects.all()
+           for filt in self.__class__.product_filters:
+               if callable(filt):
+                   qs = filt(self, qs)
+               elif type(filt) is dict:
+                   qs = qs.filter(**filt)
+               else:
+                   qs = qs.filter(filt)
+           if in_products:
+               qs = qs.filter(id__in=[p.id for p in in_products])
+           self._eligible_products_cache[cache_key] = qs
        return qs
 
     def is_eligible_product(self, product, cart):
@@ -118,9 +127,11 @@ class CartItemPercentDiscount(DiscountBase):
 
     def get_extra_cart_item_price_field(self, cart_item):
         if self.is_eligible_product(cart_item.product, cart_item.cart):
-            amount = (self.amount/100) * cart_item.line_subtotal
-            return (self.get_name(), amount,)
+            return (self.get_name(),
+                    self.calculate_discount(cart_item.line_subtotal))
 
+    def calculate_discount(self, price):
+        return (self.amount/100) * price
     class Meta:
         verbose_name = _('Cart item percent discount')
         verbose_name_plural = _('Cart item percent discounts')
@@ -134,7 +145,11 @@ class CartItemAbsoluteDiscount(DiscountBase):
 
     def get_extra_cart_item_price_field(self, cart_item):
         if self.is_eligible_product(cart_item.product, cart_item.cart):
-            return (self.get_name(), self.amount,)
+            return (self.get_name(),
+                    self.calculate_discount(cart_item.line_subtotal))
+
+    def calculate_discount(self, price):
+        return self.amount
 
     class Meta:
         verbose_name = _('Cart item absolute discount')

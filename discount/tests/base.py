@@ -118,6 +118,7 @@ class DiscountProductFiltersTest(TestCase):
         self.assertEquals(len(self.discount.eligible_products()), 0)
 
         product_discount = create_product(name=self.discount.name)
+        self.discount = DiscountBase.objects.get(pk=self.discount.pk)
         self.assertIn(product_discount, self.discount.eligible_products())
 
 
