@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from polymorphic.manager import PolymorphicManager
 from polymorphic.polymorphic_model import PolymorphicModel
 
-from shop.models.cartmodel import Cart
+from shop.util.loader import get_model_string
 from shop.models.productmodel import Product
 from shop.cart.cart_modifiers_base import BaseCartModifier
 
@@ -96,7 +96,7 @@ class DiscountBase(PolymorphicModel, BaseCartModifier):
 
 
 class CartDiscountCode(models.Model):
-    cart = models.ForeignKey(Cart, editable=False)
+    cart = models.ForeignKey(get_model_string('Cart'), editable=False)
     code = models.CharField(_('Discount code'), max_length=30)
 
     class Meta:
