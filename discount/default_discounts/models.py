@@ -12,7 +12,7 @@ class PercentDiscount(DiscountBase):
 
     def get_extra_cart_price_field(self, cart):
         amount = (self.amount/100) * cart.subtotal_price
-        return (self.get_name(), amount,)
+        return self.get_extrafield(amount)
 
     class Meta:
         verbose_name = _('Cart percent discount')
@@ -27,8 +27,8 @@ class CartItemPercentDiscount(DiscountBase):
 
     def get_extra_cart_item_price_field(self, cart_item):
         if self.is_eligible_product(cart_item.product, cart_item.cart):
-            return (self.get_name(),
-                    self.calculate_discount(cart_item.line_subtotal))
+            amount = self.calculate_discount(cart_item.line_subtotal)
+            return self.get_extrafield(amount)
 
     def calculate_discount(self, price):
         return (self.amount/100) * price
@@ -46,8 +46,8 @@ class CartItemAbsoluteDiscount(DiscountBase):
 
     def get_extra_cart_item_price_field(self, cart_item):
         if self.is_eligible_product(cart_item.product, cart_item.cart):
-            return (self.get_name(),
-                    self.calculate_discount(cart_item.line_subtotal))
+            amount = self.calculate_discount(cart_item.line_subtotal)
+            return self.get_extrafield(amount)
 
     def calculate_discount(self, price):
         return self.amount

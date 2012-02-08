@@ -57,6 +57,16 @@ class DiscountBase(PolymorphicModel, BaseCartModifier):
     def get_name(self):
         return self.name
 
+    def get_extrafield(self, value):
+        """
+        Returns field tuple for django-shop cart modifier.
+        """
+        return (
+                self.get_name(),
+                value,
+                'discount',
+                )
+
     @classmethod
     def register_product_filter(cls, filt):
         """
