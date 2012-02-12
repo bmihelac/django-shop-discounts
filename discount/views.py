@@ -15,7 +15,8 @@ class CartDiscountCodeCreateView(CreateView):
     model = CartDiscountCode
 
     def get_success_url(self):
-        return reverse('checkout_selection')
+        url = self.request.GET.get('next', reverse('checkout_selection'))
+        return url
 
     def get_form_kwargs(self):
         kwargs = super(CartDiscountCodeCreateView, self).get_form_kwargs()
@@ -27,7 +28,8 @@ class CartDiscountCodeCreateView(CreateView):
 class CartDiscountCodeDeleteView(View):
 
     def get_success_url(self):
-        return reverse('checkout_selection')
+        url = self.request.GET.get('next', reverse('checkout_selection'))
+        return url
 
     def post(self, *args, **kwargs):
         cart = get_or_create_cart(self.request)
