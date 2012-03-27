@@ -137,6 +137,7 @@ INSTALLED_APPS = (
     'south',
     'polymorphic', # We need polymorphic installed for the shop
     'discount',
+    'discount.default_discounts',
     'shop', # The django SHOP application
     'myshop', # the project we just created
 )

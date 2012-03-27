@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from polymorphic.manager import PolymorphicManager
 from polymorphic.polymorphic_model import PolymorphicModel
 
-from shop.models.cartmodel import Cart
+from shop.util.loader import get_model_string
 from shop.models.productmodel import Product
 from shop.cart.cart_modifiers_base import BaseCartModifier
 
@@ -96,61 +96,10 @@ class DiscountBase(PolymorphicModel, BaseCartModifier):
 
 
 class CartDiscountCode(models.Model):
-    cart = models.ForeignKey(Cart, editable=False)
+    cart = models.ForeignKey(get_model_string('Cart'), editable=False)
     code = models.CharField(_('Discount code'), max_length=30)
 
     class Meta:
         verbose_name = _('Cart discount code')
         verbose_name_plural = _('Cart discount codes')
 
-
-class PercentDiscount(DiscountBase):
-    """
-    Apply ``amount`` percent discount to whole cart.
-    """
-    amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
-
-    def get_extra_cart_price_field(self, cart):
-        amount = (self.amount/100) * cart.subtotal_price
-        return (self.get_name(), amount,)
-
-    class Meta:
-        verbose_name = _('Cart percent discount')
-        verbose_name_plural = _('Cart percent discounts')
-
-
-class CartItemPercentDiscount(DiscountBase):
-    """
-    Apply ``amount`` percent discount to eligible_products in Cart.
-    """
-    amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
-
-    def get_extra_cart_item_price_field(self, cart_item):
-        if self.is_eligible_product(cart_item.product, cart_item.cart):
-            return (self.get_name(),
-                    self.calculate_discount(cart_item.line_subtotal))
-
-    def calculate_discount(self, price):
-        return (self.amount/100) * price
-    class Meta:
-        verbose_name = _('Cart item percent discount')
-        verbose_name_plural = _('Cart item percent discounts')
-
-
-class CartItemAbsoluteDiscount(DiscountBase):
-    """
-    Apply ``amount`` discount to eligible_products in Cart.
-    """
-    amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
-
-    def get_extra_cart_item_price_field(self, cart_item):
-        if self.is_eligible_product(cart_item.product, cart_item.cart):
-            return (self.get_name(),
-                    self.calculate_discount(cart_item.line_subtotal))
-
-    def calculate_discount(self, price):
-        return self.amount
-
-    class Meta:
-        verbose_name = _('Cart item absolute discount')
-        verbose_name_plural = _('Cart item absolute discounts')
