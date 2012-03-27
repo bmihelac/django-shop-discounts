@@ -28,6 +28,9 @@ class Book(Product):
 
     objects = BookManager()
 
+    class Meta:
+        app_label = 'myshop'
+
 
 class BulkDiscount(DiscountBase):
     """
@@ -37,7 +40,7 @@ class BulkDiscount(DiscountBase):
     amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
     num_items = models.IntegerField(_('Minimum number of items'))
 
-    def process_cart_item(self, cart_item):
+    def process_cart_item(self, cart_item, state):
         if (cart_item.quantity >= self.num_items and
             self.is_eligible_product(cart_item.product, cart_item.cart)):
             amount = (self.amount/100) * cart_item.line_subtotal
