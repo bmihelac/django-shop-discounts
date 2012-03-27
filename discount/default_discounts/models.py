@@ -17,6 +17,7 @@ class PercentDiscount(DiscountBase):
     class Meta:
         verbose_name = _('Cart percent discount')
         verbose_name_plural = _('Cart percent discounts')
+        app_label = 'discount'
 
 
 class CartItemPercentDiscount(DiscountBase):
@@ -36,6 +37,7 @@ class CartItemPercentDiscount(DiscountBase):
     class Meta:
         verbose_name = _('Cart item percent discount')
         verbose_name_plural = _('Cart item percent discounts')
+        app_label = 'discount'
 
 
 class CartItemAbsoluteDiscount(DiscountBase):
@@ -55,3 +57,4 @@ class CartItemAbsoluteDiscount(DiscountBase):
     class Meta:
         verbose_name = _('Cart item absolute discount')
         verbose_name_plural = _('Cart item absolute discounts')
+        app_label = 'discount'
