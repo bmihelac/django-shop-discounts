@@ -8,8 +8,12 @@ from django.conf import settings
 from shop.models.productmodel import Product
 from shop.models.cartmodel import Cart
 
-from discount.models import (DiscountBase, PercentDiscount, 
-        CartItemPercentDiscount, CartItemAbsoluteDiscount)
+from discount.models import DiscountBase
+from discount.default_discounts.models import (
+        PercentDiscount,
+        CartItemPercentDiscount,
+        CartItemAbsoluteDiscount,
+        )
 
 
 settings.SHOP_CART_MODIFIERS = ['discount.cart_modifiers.DiscountCartModifier']
