@@ -13,6 +13,7 @@ setup(
     author="Bojan Mihelac",
     author_email="bmihelac@mihelac.org",
     url="https://github.com/bmihelac/django-shop-discounts",
+    license='BSD License',
     install_requires=[
         'django-shop',
         ],
