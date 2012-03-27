@@ -13,6 +13,9 @@ from shop.cart.cart_modifiers_base import BaseCartModifier
 
 
 class DiscountBaseManager(PolymorphicManager):
+    """
+    A manager for ``DiscountBase`` filtering.
+    """
 
     def active(self, at_datetime=None, code=''):
         if not at_datetime:
@@ -26,6 +29,7 @@ class DiscountBaseManager(PolymorphicManager):
 
 class DiscountBase(PolymorphicModel, BaseCartModifier):
     """
+    Base discount model.
     """
     name = models.CharField(_('Name'), max_length=100)
     code = models.CharField(_('Code'), max_length=30,
@@ -40,6 +44,7 @@ class DiscountBase(PolymorphicModel, BaseCartModifier):
             default=0)
 
     objects = DiscountBaseManager()
+
     product_filters = []
 
     def __init__(self, *args, **kwargs):
@@ -65,15 +70,34 @@ class DiscountBase(PolymorphicModel, BaseCartModifier):
         """
         cls.product_filters.append(filt)
 
+    def get_products(self):
+        """
+        Return initial product queryset of products eligible for discount.
+
+        Default implementation returns al products.
+
+        Subclasses can override this method to filter products further,
+        ie by category or exclude products that are on sale.
+        """
+        return Product.objects.all()
+
     def eligible_products(self, in_products=None):
        """
-       Returns queryset of products this discounts may apply to.
+       Returns queryset of products that discount may apply to.
+
+       1. get initial initial product queryset with ``get_products``
+
+       2. apply each of product filters registered with
+          ``register_product_filter``
+
+       3. intersect queryset with ``in_products`` products, if ``in_products``
+          is given
        """
        cache_key = tuple(in_products) if in_products else None
        try:
            qs = self._eligible_products_cache[cache_key]
        except KeyError:
-           qs = Product.objects.all()
+           qs = self.get_products()
            for filt in self.__class__.product_filters:
                if callable(filt):
                    qs = filt(self, qs)
@@ -96,6 +120,9 @@ class DiscountBase(PolymorphicModel, BaseCartModifier):
 
 
 class CartDiscountCode(models.Model):
+    """
+    Model holds entered discount code for ``Cart``.
+    """
     cart = models.ForeignKey(get_model_string('Cart'), editable=False)
     code = models.CharField(_('Discount code'), max_length=30)
 
