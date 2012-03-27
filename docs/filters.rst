@@ -2,31 +2,31 @@
 Filters
 =======
 
-Example of implementing filtering products by category in DiscountBase:::
+Filters are ``dict`` or ``callable`` types that, when registered with
+discount class(es) influences which products are eligible for this
+discount.
 
-    def category_product_filter(discount, queryset):
-        """
-        Allow discount type to be filtered by category.
-        """
-        if not discount.categories.count():
-            return queryset
-        ids = [c.id for c in discount.categories.all()]
-        return queryset.filter(models.Q( Book___categories__id__in=ids))
+Filters as dict
+---------------
 
-    DiscountBase.register_product_filter(category_product_filter)
+Product queryset is filtered with field lookups defined in dict::
 
+    filt = {'unit_price__gt': 10}
+    # only products with unit_price > 10 are eligible
+    DiscountBase.register_product_filter(filt)
 
-    #add categories field to BulkDiscount
-    BulkDiscount.add_to_class('categories', 
-            models.ManyToManyField(Category, 
-                verbose_name=_('Categories'),
-                blank=True,
-                null=True,
-                help_text=_('Limit discount to selected categories')
-                ))
+Filters as callable
+-------------------
 
-This would allow editor to select to what categories of products all discount 
-types applies.
+Callable is called with two arguments:
 
-This code is implemented in :doc:`example_app`.
+* discount model
 
+* product queryset
+
+::
+    def filt(discount, qs):
+        # only product names as discount are eligible
+        return(qs.filter(name=discount.name))
+
+    DiscountBase.register_product_filter(filt)

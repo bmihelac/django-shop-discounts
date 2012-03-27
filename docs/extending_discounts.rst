@@ -1,11 +1,47 @@
-=========================
-Extending discounts types
-=========================
+================
+Custom discounts
+================
 
-Adding your own discount types is easy.
+Adding custom discount types is easy and can be achived with subclassing
+polymorphic model ``discount.models.DiscountBase``.
 
-It is achived with subclassing ``discount.models.DiscountBase``
-class and implementing ``process_cart_item`` or ``process_cart`` methods.
+Custom discount types can add fields and override following methods:
+
+* ``get_products`` to filter initial product queryset discount operates on.
+  Overriding this allows to say that discount should be applied only to some
+  categories, for example.
+
+  See also :doc:`filters`
+
+* ``get_extra_cart_item_price_field`` - for adding extra cart item price field
+  to cart items containing eligible products
+
+* ``get_extra_cart_price_field`` - for adding extra cart price field to cart
+
+Design considerations
+---------------------
+
+While django-shop-discount app comes with few bundled discount types, it does
+not asume how specific shop is organized or how discount logic should work.
+
+Typical discounts organization can set base constrains in base discount class
+and specifing constrains in subclasses.
+
+For example::
+
+    class SiteBaseDiscount(DiscountBase):
+        categories = models.ManyToManyField('myshop.Category',
+                help_text=_('Limit discount to selected categories')
+
+        def get_products():
+            qs = super(SiteBaseDiscount, self).get_products()
+            # code that excludes products that does not belong to self.categories
+            return qs
+
+    class CartItemPercentDiscount(SiteBaseDiscount, mixins.CartItemPercentDiscountMixin):
+        pass
+
+See :doc:`api_mixins`.
 
 Example
 -------
@@ -24,14 +60,13 @@ Add this model::
         amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
         num_items = models.IntegerField(_('Minimum number of items'))
 
-        def process_cart_item(self, cart_item):
+        def get_extra_cart_item_price_field(self, cart_item):
             if (cart_item.quantity >= self.num_items and
                 self.is_eligible_product(cart_item.product, cart_item.cart)):
                 amount = (self.amount/100) * cart_item.line_subtotal
-                to_append = (self.get_name(), amount)
-                cart_item.extra_price_fields.append(to_append)
+                return (self.get_name(), amount,)
 
-Given that you registered ``BulkDiscount`` to django admin, editor would be able
-to set bulk discounts.
+Given that you registered ``BulkDiscount`` with django admin,
+site administrator would be able to set bulk discounts.
 
-This code is implemented in :doc:`example_app`.
+See this discount in action in :doc:`example_app`.
