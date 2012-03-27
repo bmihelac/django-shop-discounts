@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from discount.default_discounts.models import (PercentDiscount, 
+from .models import (PercentDiscount, 
         CartItemPercentDiscount,
         CartItemAbsoluteDiscount
         )
