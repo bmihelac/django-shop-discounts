@@ -139,6 +139,7 @@ INSTALLED_APPS = (
     'discount',
     'discount.default_discounts',
     'shop', # The django SHOP application
+    'shop.addressmodel', # The default Address and country models
     'myshop', # the project we just created
 )
 
