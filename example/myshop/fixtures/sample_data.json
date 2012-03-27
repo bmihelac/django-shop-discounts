@@ -1,63 +1,6 @@
 [
     {
         "pk": 1, 
-        "model": "shop.product", 
-        "fields": {
-            "name": "Cat's Cradle: A Novel", 
-            "unit_price": "10", 
-            "last_modified": "2011-05-22 09:59:19", 
-            "active": true, 
-            "date_added": "2011-05-22 09:59:19", 
-            "slug": "cats-cradle", 
-            "polymorphic_ctype": 27
-        }
-    }, 
-    {
-        "pk": 1, 
-        "model": "discount.discountbase", 
-        "fields": {
-            "valid_until": null, 
-            "valid_from": "2011-05-22 09:54:35", 
-            "name": "-5% for all products", 
-            "num_uses": 0, 
-            "is_active": true, 
-            "code": "Summer2011", 
-            "polymorphic_ctype": 25
-        }
-    }, 
-    {
-        "pk": 2, 
-        "model": "discount.discountbase", 
-        "fields": {
-            "valid_until": null, 
-            "valid_from": "2011-05-22 09:55:02", 
-            "name": "-10% bulk discount", 
-            "num_uses": 0, 
-            "is_active": true, 
-            "code": "", 
-            "polymorphic_ctype": 28, 
-            "categories": [
-                1
-            ]
-
-        }
-    }, 
-    {
-        "pk": 1, 
-        "model": "discount.cartitempercentdiscount", 
-        "fields": {
-            "amount": "-5"
-        }
-    }, 
-    {
-        "pk": 1, 
-        "model": "myshop.category", 
-        "fields": {
-            "name": "Fiction"
-        }
-    }, 
-    {
-        "pk": 1, 
         "model": "myshop.book", 
         "fields": {
             "short_description": "Cat's Cradle, one of Vonnegut's most entertaining novels", 
@@ -69,11 +12,89 @@
         }
     }, 
     {
+        "pk": 1, 
+        "model": "shop.product", 
+        "fields": {
+            "name": "Cat's Cradle: A Novel", 
+            "unit_price": "10", 
+            "last_modified": "2011-05-22 09:59:19", 
+            "active": true, 
+            "date_added": "2011-05-22 09:59:19", 
+            "slug": "cats-cradle", 
+            "polymorphic_ctype": [
+                "myshop", 
+                "book"
+            ]
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "discount.discountbase", 
+        "fields": {
+            "valid_until": null, 
+            "valid_from": "2011-05-22T09:54:35", 
+            "name": "-5% for all products", 
+            "num_uses": 0, 
+            "is_active": true, 
+            "code": "Summer2011", 
+            "categories": [], 
+            "polymorphic_ctype": [
+                "discount", 
+                "cartitempercentdiscount"
+            ]
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "discount.discountbase", 
+        "fields": {
+            "valid_until": null, 
+            "valid_from": "2011-05-22T09:55:02", 
+            "name": "-10% bulk discount", 
+            "num_uses": 0, 
+            "is_active": true, 
+            "code": "", 
+            "categories": [
+                1
+            ], 
+            "polymorphic_ctype": [
+                "myshop", 
+                "bulkdiscount"
+            ]
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "discount.cartdiscountcode", 
+        "fields": {
+            "code": "Summer2011", 
+            "cart": 1
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "discount.cartitempercentdiscount", 
+        "fields": {
+            "amount": "-5", 
+            "categories": []
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "myshop.category", 
+        "fields": {
+            "name": "Fiction"
+        }
+    }, 
+    {
         "pk": 2, 
         "model": "myshop.bulkdiscount", 
         "fields": {
             "amount": "-10", 
-            "num_items": 5
+            "num_items": 5, 
+            "categories": [
+                1
+            ]
         }
     }, 
     {
@@ -86,12 +107,12 @@
             "is_active": true, 
             "is_superuser": true, 
             "is_staff": true, 
-            "last_login": "2011-05-22 09:58:23", 
+            "last_login": "2012-03-27T03:35:22.498", 
             "groups": [], 
             "user_permissions": [], 
-            "password": "sha1$c0249$d418cd730a138cd5245b0750878fb8d29448e4ea", 
+            "password": "pbkdf2_sha256$10000$ElapCIfvrMin$d0x0poRXFIycgEwjG37/kv64dNo1OXQn3DNMt9U/kB0=", 
             "email": "admin@example.com", 
-            "date_joined": "2011-04-08 06:12:24"
+            "date_joined": "2011-04-08T06:12:24"
         }
     }
 ]
