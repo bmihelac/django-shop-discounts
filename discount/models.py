@@ -92,6 +92,7 @@ class DiscountBase(PolymorphicModel, BaseCartModifier):
                    qs = qs.filter(filt)
            if in_products:
                qs = qs.filter(id__in=[p.id for p in in_products])
+           qs = qs.distinct()
            self._eligible_products_cache[cache_key] = qs
        return qs
 
