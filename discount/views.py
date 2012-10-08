@@ -19,7 +19,8 @@ class CartDiscountCodeCreateView(CreateView):
 
     def get_form_kwargs(self):
         kwargs = super(CartDiscountCodeCreateView, self).get_form_kwargs()
-        instance = CartDiscountCode(cart=get_or_create_cart(self.request))
+        cart = get_or_create_cart(self.request, True)
+        instance = CartDiscountCode(cart=cart)
         kwargs.update({'instance': instance})
         return kwargs
 
