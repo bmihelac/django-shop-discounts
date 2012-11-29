@@ -125,6 +125,15 @@ class DiscountProductFiltersTest(TestCase):
         self.discount = DiscountBase.objects.get(pk=self.discount.pk)
         self.assertIn(product_discount, self.discount.eligible_products())
 
+    def test_04_subclasses_product_filters(self):
+        class DiscountBaseSubclass(DiscountBase):
+            pass
+
+        filt = {'unit_price__gt': 10}
+        DiscountBase.register_product_filter(filt)
+        self.assertNotEqual(DiscountBase.product_filters,
+                DiscountBaseSubclass.product_filters)
+
 
 class CartItemPercentDiscountTest(TestCase):
 
