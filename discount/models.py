@@ -30,7 +30,7 @@ class DiscountBase(PolymorphicModel, BaseCartModifier):
 
     objects = DiscountBaseManager()
 
-    product_filters = []
+    product_filters = None
 
     def __init__(self, *args, **kwargs):
         self._eligible_products_cache = {}
@@ -53,6 +53,8 @@ class DiscountBase(PolymorphicModel, BaseCartModifier):
         Register filters that affects which products this discount class
         may apply to.
         """
+        if cls.product_filters is None:
+            cls.product_filters = []
         cls.product_filters.append(filt)
 
     def get_products(self):
@@ -83,7 +85,8 @@ class DiscountBase(PolymorphicModel, BaseCartModifier):
            qs = self._eligible_products_cache[cache_key]
        except KeyError:
            qs = self.get_products()
-           for filt in self.__class__.product_filters:
+           product_filters = type(self).product_filters or []
+           for filt in product_filters:
                if callable(filt):
                    qs = filt(self, qs)
                elif type(filt) is dict:
