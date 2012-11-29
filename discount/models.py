@@ -4,7 +4,10 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 
-from polymorphic.polymorphic_model import PolymorphicModel
+from polymorphic.polymorphic_model import (
+        PolymorphicModel,
+        PolymorphicModelBase,
+        )
 
 from shop.util.loader import get_model_string
 from shop.models.productmodel import Product
@@ -13,10 +16,18 @@ from shop.cart.cart_modifiers_base import BaseCartModifier
 from .managers import DiscountBaseManager
 
 
+class DiscountMetaclass(PolymorphicModelBase):
+    def __new__(cls, name, bases, attrs):
+        attrs['product_filters'] = []
+        return super(DiscountMetaclass, cls).__new__(cls, name, bases, attrs)
+
+
 class DiscountBase(PolymorphicModel, BaseCartModifier):
     """
     Base discount model.
     """
+    __metaclass__ = DiscountMetaclass
+
     name = models.CharField(_('Name'), max_length=100)
     code = models.CharField(_('Code'), max_length=30,
             blank=True, null=False, 
@@ -30,8 +41,6 @@ class DiscountBase(PolymorphicModel, BaseCartModifier):
             default=0)
 
     objects = DiscountBaseManager()
-
-    product_filters = []
 
     def __init__(self, *args, **kwargs):
         self._eligible_products_cache = {}
