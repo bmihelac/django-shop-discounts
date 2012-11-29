@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ValidationError
 
 from polymorphic.polymorphic_model import PolymorphicModel
 
@@ -119,3 +120,8 @@ class CartDiscountCode(models.Model):
         verbose_name = _('Cart discount code')
         verbose_name_plural = _('Cart discount codes')
 
+    def clean_fields(self, *args, **kwargs):
+        super(CartDiscountCode, self).clean_fields(*args, **kwargs)
+        if not DiscountBase.objects.active().filter(code=self.code):
+            msg = _('Discount code is invalid or expired.')
+            raise ValidationError({'code': [msg]})

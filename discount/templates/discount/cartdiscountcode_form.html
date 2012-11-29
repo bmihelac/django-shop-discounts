@@ -4,9 +4,14 @@
 {% block body %}
   <form action="{% url discount_cartdiscountcode_create %}?next={{ request.GET.next }}" method="post" id="discount-code-form">
     {% csrf_token %}
-    {{ form.code.label }}: {{ form.code }}
-    <input type="submit" name="" class="btn" value="{% trans "Submit" %}" id=""/>
-    {% url checkout_selection as default_back_url %}
-    <a href="{{ request.GET.next|default:default_back_url }}">{% trans "Cancel" %}</a>
+
+    {{ form.as_p }}
+
+    <p>
+      <input type="submit" name="submit" class="btn" value="{% trans "Submit" %}" id=""/>
+      {% url checkout_selection as default_back_url %}
+      <a href="{{ request.GET.next|default:default_back_url }}">{% trans "Cancel" %}</a>
+    </p>
+
   </form>
 {% endblock %}

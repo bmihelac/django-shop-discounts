@@ -2,66 +2,86 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-13 08:01+0200\n"
+"POT-Creation-Date: 2012-10-08 18:37+0200\n"
 "PO-Revision-Date: 2011-05-13 09:42\n"
 "Last-Translator:   <bmihelac@mihelac.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3)\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
+"%100==4 ? 2 : 3)\n"
 "X-Translated-Using: django-rosetta 0.5.9\n"
 
-#: models.py:29
+#: mixins.py:9 mixins.py:23 mixins.py:41
+msgid "Amount"
+msgstr "Znesek"
+
+#: models.py:20
 msgid "Name"
 msgstr "Ime"
 
-#: models.py:30
+#: models.py:21
 msgid "Code"
 msgstr "Koda"
 
-#: models.py:32
-msgid "If provided, discount is valid only with included code"
+#: models.py:23
+#, fuzzy
+msgid "Is discount valid only with included code"
 msgstr "Če je vneseno bo popust veljal samo z vpisano kodo"
 
-#: models.py:34
+#: models.py:25
 msgid "Is active"
 msgstr "Aktivno?"
 
-#: models.py:35
+#: models.py:26
 msgid "Valid from"
 msgstr "Velja od"
 
-#: models.py:36
+#: models.py:27
 msgid "Valid until"
 msgstr "Velja do"
 
-#: models.py:38
+#: models.py:29
 msgid "Number of times already used"
 msgstr "Število že uporabljenih popustov"
 
-#: models.py:43
+#: models.py:41
 msgid "Discount"
 msgstr "Popust"
 
-#: models.py:44
+#: models.py:42
 msgid "Discounts"
 msgstr "Popusti"
 
-#: models.py:65
+#: models.py:114
+#, fuzzy
+msgid "Discount code"
+msgstr "Košarica koda za popust"
+
+#: models.py:117
 msgid "Cart discount code"
 msgstr "Košarica koda za popust"
 
-#: models.py:66
+#: models.py:118
 msgid "Cart discount codes"
 msgstr "Košarica kode za popust"
 
-#: models.py:73
-msgid "Amount"
-msgstr "Znesek"
+#: models.py:123
+msgid "Discount code is invalid or expired."
+msgstr ""
+
+#: templates/discount/cartdiscountcode_form.html:11
+msgid "Submit"
+msgstr ""
+
+#: templates/discount/cartdiscountcode_form.html:13
+msgid "Cancel"
+msgstr ""
