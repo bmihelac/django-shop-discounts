@@ -128,6 +128,6 @@ class CartDiscountCode(models.Model):
 
     def clean_fields(self, *args, **kwargs):
         super(CartDiscountCode, self).clean_fields(*args, **kwargs)
-        if not DiscountBase.objects.active().filter(code=self.code):
+        if not DiscountBase.objects.active(code=self.code):
             msg = _('Discount code is invalid or expired.')
             raise ValidationError({'code': [msg]})
