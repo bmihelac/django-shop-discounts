@@ -16,6 +16,9 @@ from discount.default_discounts.models import (
         )
 
 
+class FakeRequest(object):
+    pass
+
 settings.SHOP_CART_MODIFIERS = ['discount.cart_modifiers.DiscountCartModifier']
 
 
@@ -66,7 +69,7 @@ class DiscountCartModifierTest(TestCase):
 
     def test_01_percent_discount(self):
         PercentDiscount.objects.create(name='dsc', amount="-10")
-        self.cart.update({})
+        self.cart.update(FakeRequest()) #changed according to shop 0.2 API
         self.assertEquals(self.cart.total_price, 9)
         self.assertEquals(len(self.cart.extra_price_fields), 1)
         self.assertEquals(self.cart.extra_price_fields[0][0], 'dsc')
@@ -76,13 +79,13 @@ class DiscountCartModifierTest(TestCase):
         PercentDiscount.objects.create(
                 name='dsc', code='dsc10', amount="-10")
         self.cart.cartdiscountcode_set.create(code='dsc10')
-        self.cart.update({})
+        self.cart.update(FakeRequest()) #changed according to shop 0.2 API
         self.assertEquals(self.cart.total_price, 9)
 
     def test_03_without_valid_discount_code(self):
         PercentDiscount.objects.create(
                 name='dsc', code='dsc10', amount="-10")
-        self.cart.update({})
+        self.cart.update(FakeRequest()) #changed according to shop 0.2 API
         self.assertEquals(self.cart.total_price, 10)
 
 
@@ -91,6 +94,7 @@ def create_product(**kwargs):
             'name': 'test',
             'unit_price': Decimal("10.0"),
             'slug': str(uuid.uuid4()),
+            "active": True
             }
     data.update(kwargs)
     return Product.objects.create(**data)
@@ -146,7 +150,7 @@ class CartItemPercentDiscountTest(TestCase):
 
     def test_01_cart_item_should_be_discounted(self):
         cart_item = self.cart.items.get(product=self.product_1)
-        cart_item.update({})
+        cart_item.update(FakeRequest()) #changed according to shop 0.2 API
         self.assertEquals(len(cart_item.extra_price_fields), 1)
         self.assertEquals(cart_item.extra_price_fields[0],
                 ((unicode(self.discount), Decimal("-0.5"), )))
@@ -163,7 +167,7 @@ class CartItemAbsoluteDiscountTest(TestCase):
 
     def test_01_cart_item_should_be_discounted(self):
         cart_item = self.cart.items.get(product=self.product_1)
-        cart_item.update({})
+        cart_item.update(FakeRequest()) #changed according to shop 0.2 API
         self.assertEquals(len(cart_item.extra_price_fields), 1)
         self.assertEquals(cart_item.extra_price_fields[0],
                 ((unicode(self.discount), Decimal("-1"), )))
