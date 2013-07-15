@@ -8,7 +8,7 @@ class PercentDiscountMixin(models.Model):
     """
     amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
 
-    def get_extra_cart_price_field(self, cart):
+    def get_extra_cart_price_field(self, cart, request=None):
         amount = (self.amount/100) * cart.subtotal_price
         return (self.get_name(), amount,)
 
@@ -22,7 +22,7 @@ class CartItemPercentDiscountMixin(models.Model):
     """
     amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
 
-    def get_extra_cart_item_price_field(self, cart_item):
+    def get_extra_cart_item_price_field(self, cart_item, request=None):
         if self.is_eligible_product(cart_item.product, cart_item.cart):
             return (self.get_name(),
                     self.calculate_discount(cart_item.line_subtotal))
@@ -40,7 +40,7 @@ class CartItemAbsoluteDiscountMixin(models.Model):
     """
     amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
 
-    def get_extra_cart_item_price_field(self, cart_item):
+    def get_extra_cart_item_price_field(self, cart_item, request=None):
         if self.is_eligible_product(cart_item.product, cart_item.cart):
             return (self.get_name(),
                     self.calculate_discount(cart_item.line_subtotal))
