@@ -40,7 +40,7 @@ class BulkDiscount(DiscountBase):
     amount = models.DecimalField(_('Amount'), max_digits=5, decimal_places=2)
     num_items = models.IntegerField(_('Minimum number of items'))
 
-    def get_extra_cart_item_price_field(self, cart_item):
+    def get_extra_cart_item_price_field(self, cart_item, request):
         if (cart_item.quantity >= self.num_items and
             self.is_eligible_product(cart_item.product, cart_item.cart)):
             amount = (self.amount/100) * cart_item.line_subtotal
