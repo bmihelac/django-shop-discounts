@@ -29,3 +29,7 @@ class DiscountCartModifier(BaseCartModifier):
     def pre_process_cart(self, cart, state):
         for discount in self.get_active_discounts(cart):
             discount.pre_process_cart(cart, state)
+
+    def post_process_cart(self, cart, state):
+        for discount in self.get_active_discounts(cart):
+            discount.post_process_cart(cart, state)
