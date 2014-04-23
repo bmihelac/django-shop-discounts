@@ -1,4 +1,10 @@
-from django.conf.urls.defaults import url, patterns
+try:
+    # django 1.6+
+    from django.conf.urls import patterns
+except ImportError:
+    # django <1.6
+    from django.conf.urls.defaults import patterns
+
 
 from discount.views import CartDiscountCodeDeleteView, CartDiscountCodeCreateView
 
